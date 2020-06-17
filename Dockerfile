@@ -5,12 +5,16 @@ RUN adduser -D -h /home/deploy -u 1001  \
     -G deploy -s /bin/sh -k /dev/null deploy
 
 USER deploy
+
 WORKDIR /home/deploy
+
 COPY --chown=deploy:deploy ./src/app.py ./
 COPY --chown=deploy:deploy ./requirements.txt ./
 COPY --chown=deploy:deploy ./entrypoint.sh ./
+RUN pip install -r requirements.txt --user
 
 EXPOSE 5000
+
 ENTRYPOINT ["./entrypoint.sh"]
 
 

@@ -1,6 +1,6 @@
-TAG    := $(git rev-parse --abbrev-ref HEAD)
+TAG    := $$(git rev-parse --abbrev-ref HEAD)
 LATEST := latest
-PROJECT_ID := infra
+PROJECT_ID := shreyas7p
 
 build:
 	@docker build -t test-app:${TAG} -f Dockerfile .
@@ -14,3 +14,13 @@ clean-pyc:
 
 test: clean-pyc
 	python src/unit_test.py
+
+tag:
+	@docker tag test-app:${TAG} ${PROJECT_ID}/test-app:${LATEST}
+	@docker tag test-app:${TAG} ${PROJECT_ID}/test-app:${TAG}
+
+push:
+	@docker push ${PROJECT_ID}/test-app:${LATEST}
+	@docker push ${PROJECT_ID}/test-app:${TAG}
+
+all: build tag push
