@@ -1,6 +1,7 @@
 # Getting the git branch name
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 LATEST := latest
+APP_NAME := test-app
 # Project/ DockerHub repo name 
 PROJECT_ID := shreyas7p
 
@@ -15,12 +16,12 @@ endif
 
 # Build and tag local docker image
 build: branch-check
-	@docker build -t test-app:${TAG} -f Dockerfile .
-	@docker tag test-app:${TAG} test-app:${TAG}
+	@docker build -t ${APP_NAME}:${TAG} -f Dockerfile .
+	@docker tag ${APP_NAME}:${TAG} test-app:${TAG}
 
 # Remove local docker image 
 clean: branch-check
-	@docker rmi -f test-app:${TAG}
+	@docker rmi -f ${APP_NAME}:${TAG}
 
 # Clean pythn cach
 clean-pyc:
@@ -32,10 +33,10 @@ test: clean-pyc
 
 # Tag the docker image for DockerHub push
 tag: branch-check
-	@docker tag test-app:${TAG} ${PROJECT_ID}/test-app:${TAG} 
+	@docker tag ${APP_NAME}:${TAG} ${PROJECT_ID}/${APP_NAME}:${TAG} 
 # Pushs the image to DockerHub
 push: branch-check
-	@docker push ${PROJECT_ID}/test-app:${TAG}
+	@docker push ${PROJECT_ID}/${APP_NAME}:${TAG}
 
 # Build, Tag, and Pushes the local Docker image to DockerHub
 all: build tag push
